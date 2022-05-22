@@ -33,11 +33,7 @@
           default = pkgs.mkShell {
             buildInputs = with pkgs; [
               (python3.withPackages(ps: with ps; [
-                ipython
                 jupyter
-                graphviz
-                numpy
-                pandas
                 matplotlib
                 darknet.packages.${system}.pydnet
                 (opencv4.override opencvOverride)
