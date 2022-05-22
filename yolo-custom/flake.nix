@@ -1,5 +1,5 @@
 {
-  description = "LPR flake";
+  description = "template for training your own models";
 
   inputs = {
     #nixpkgs   = { url = "github:nixos/nixpkgs/nixos-unstable"; };

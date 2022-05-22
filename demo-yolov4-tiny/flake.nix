@@ -1,5 +1,5 @@
 {
-  description = "LPR flake";
+  description = "Jupyter notebook demonstrating inference on an image using yolov4-tiny.";
 
   inputs = {
     #nixpkgs   = { url = "github:nixos/nixpkgs/nixos-unstable"; };
