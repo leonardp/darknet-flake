@@ -62,6 +62,11 @@
           path = ./demo-yolov4-tiny;
           description = "Jupyter notebook demonstrating inference on an image using yolov4-tiny.";
         };
+
+        yolo-custom = {
+          path = ./yolo-custom;
+          description = "template for training your own models";
+        };
       };
 
       defaultTemplate = self.templates.demo-yolov4-tiny;
