@@ -1,0 +1,13 @@
+diff --git a/src/pydnet/darknet.py b/src/pydnet/darknet.py
+index 4efda85..161fb4b 100644
+--- a/src/pydnet/darknet.py
++++ b/src/pydnet/darknet.py
+@@ -232,7 +232,7 @@ def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45
+ 
+ 
+ if os.name == "posix":
+-    lib = CDLL(find_library("libdarknet.so"), RTLD_GLOBAL)
++    lib = CDLL("@darknet@", RTLD_GLOBAL)
+ elif os.name == "nt":
+     cwd = os.path.dirname(__file__)
+     os.environ['PATH'] = cwd + ';' + os.environ['PATH']
