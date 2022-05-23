@@ -28,7 +28,7 @@
       packages = forAllSystems (system:
         let pkgs = nixpkgsFor.${system};
         in {
-          darknet = pkgs.callPackage ./nix/darknet.nix darknetOverride;
+          darknet = pkgs.callPackage ./nix/darknet.nix { };
           pydnet = pkgs.callPackage ./nix/pydnet.nix { darknet = self.packages.${system}.darknet; };
       });
 
@@ -41,12 +41,11 @@
             buildInputs = with pkgs; [
               (python3.withPackages(ps: with ps; [
                 self.packages.${system}.pydnet
-                (opencv4.override opencvOverride)
+                opencv4
               ]))
               cowsay
               fortune
-              (self.packages.${system}.darknet.override darknetOverride
-                // { opencv = (opencv.override opencvOverride); })
+              self.packages.${system}.darknet
             ];
 
             shellHook = "cowsay Oh hai!"; # "fortune | cowsay";
