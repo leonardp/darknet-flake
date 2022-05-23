@@ -16,12 +16,13 @@
       #
 
       darknetOverride = {
-        cudaSupport = true;
-        cudnnSupport = true;
+      #  cudaSupport = true;
+      #  cudnnSupport = true;
       };
       opencvOverride = {
-        enableGtk3 = true;
+      #  enableGtk3 = true;
       };
+
     in {
 
       packages = forAllSystems (system:
@@ -48,7 +49,7 @@
                 // { opencv = (opencv.override opencvOverride); })
             ];
 
-            shellHook = "cowsay Oh Hai!"; # "fortune | cowsay";
+            shellHook = "cowsay Oh hai!"; # "fortune | cowsay";
           };
       });
 
