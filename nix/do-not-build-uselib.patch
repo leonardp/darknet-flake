@@ -1,15 +1,145 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d34b8f8..ea6d89f 100644
+index d34b8f8..4bae10e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -417,10 +417,8 @@ endif()
+@@ -13,7 +13,6 @@ option(CMAKE_VERBOSE_MAKEFILE "Create verbose makefile" ON)
+ option(CUDA_VERBOSE_BUILD "Create verbose CUDA build" ON)
+ option(BUILD_SHARED_LIBS "Create dark as a shared library" ON)
+ option(BUILD_AS_CPP "Build Darknet using C++ compiler also for C files" OFF)
+-option(BUILD_USELIB_TRACK "Build uselib_track" ON)
+ option(MANUALLY_EXPORT_TRACK_OPTFLOW "Manually export the TRACK_OPTFLOW=1 define" OFF)
+ option(ENABLE_OPENCV "Enable OpenCV integration" ON)
+ option(ENABLE_CUDA "Enable CUDA support" ON)
+@@ -279,22 +278,6 @@ endif()
+ set(CMAKE_CXX_FLAGS "${ADDITIONAL_CXX_FLAGS} ${SHAREDLIB_CXX_FLAGS} ${CMAKE_CXX_FLAGS}")
+ set(CMAKE_C_FLAGS "${ADDITIONAL_C_FLAGS} ${SHAREDLIB_C_FLAGS} ${CMAKE_C_FLAGS}")
+ 
+-if(OpenCV_FOUND)
+-  if(ENABLE_CUDA AND OpenCV_CUDA_VERSION)
+-    if(TARGET opencv_cudaoptflow)
+-      list(APPEND OpenCV_LINKED_COMPONENTS "opencv_cudaoptflow")
+-    endif()
+-    if(TARGET opencv_cudaimgproc)
+-      list(APPEND OpenCV_LINKED_COMPONENTS "opencv_cudaimgproc")
+-    endif()
+-  elseif(ENABLE_CUDA AND NOT OpenCV_CUDA_VERSION)
+-    set(BUILD_USELIB_TRACK "FALSE" CACHE BOOL "Build uselib_track" FORCE)
+-    message(STATUS "  ->  darknet is fine for now, but uselib_track has been disabled!")
+-    message(STATUS "  ->  Please rebuild OpenCV from sources with CUDA support to enable it")
+-  else()
+-    set(BUILD_USELIB_TRACK "FALSE" CACHE BOOL "Build uselib_track" FORCE)
+-  endif()
+-endif()
+ 
+ if(ENABLE_CUDA AND ENABLE_CUDNN)
+   find_package(CUDNN REQUIRED)
+@@ -416,15 +399,6 @@ if(BUILD_AS_CPP)
+ endif()
  set_target_properties(dark PROPERTIES OUTPUT_NAME "darknet")
  
- if(OpenCV_FOUND AND OpenCV_VERSION VERSION_GREATER "3.0" AND BUILD_USELIB_TRACK)
+-if(OpenCV_FOUND AND OpenCV_VERSION VERSION_GREATER "3.0" AND BUILD_USELIB_TRACK)
 -  add_executable(uselib_track ${CMAKE_CURRENT_LIST_DIR}/src/yolo_console_dll.cpp)
+-endif()
+-
+-add_executable(uselib ${CMAKE_CURRENT_LIST_DIR}/src/yolo_console_dll.cpp)
+-if(BUILD_AS_CPP)
+-  set_target_properties(uselib PROPERTIES LINKER_LANGUAGE CXX)
+-endif()
+-
+ add_executable(darknet ${CMAKE_CURRENT_LIST_DIR}/src/darknet.c ${sources} ${headers} ${cuda_sources})
+ if(BUILD_AS_CPP)
+   set_source_files_properties(${CMAKE_CURRENT_LIST_DIR}/src/darknet.c PROPERTIES LANGUAGE CXX)
+@@ -433,11 +407,9 @@ endif()
+ 
+ target_include_directories(darknet PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include> $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}> $<BUILD_INTERFACE:${Stb_INCLUDE_DIR}>)
+ target_include_directories(dark PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include> $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}> $<BUILD_INTERFACE:${Stb_INCLUDE_DIR}>)
+-target_include_directories(uselib PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include> $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}> $<BUILD_INTERFACE:${Stb_INCLUDE_DIR}>)
+ 
+ target_compile_definitions(darknet PRIVATE -DUSE_CMAKE_LIBS)
+ target_compile_definitions(dark PRIVATE -DUSE_CMAKE_LIBS)
+-target_compile_definitions(uselib PRIVATE -DUSE_CMAKE_LIBS)
+ 
+ if(OpenCV_FOUND AND OpenCV_VERSION VERSION_GREATER "3.0" AND BUILD_USELIB_TRACK AND NOT MANUALLY_EXPORT_TRACK_OPTFLOW)
+   target_compile_definitions(dark PUBLIC TRACK_OPTFLOW=1)
+@@ -456,7 +428,6 @@ endif()
+ 
+ if(OpenCV_FOUND)
+   target_link_libraries(darknet PRIVATE ${OpenCV_LINKED_COMPONENTS})
+-  target_link_libraries(uselib PRIVATE ${OpenCV_LINKED_COMPONENTS})
+   target_link_libraries(dark PUBLIC ${OpenCV_LINKED_COMPONENTS})
+   target_include_directories(dark PRIVATE ${OpenCV_INCLUDE_DIRS})
+   target_compile_definitions(darknet PRIVATE -DOPENCV)
+@@ -480,11 +451,11 @@ if(MSVC)
+   target_link_libraries(darknet PRIVATE wsock32)
+   target_link_libraries(dark PUBLIC PThreads_windows::PThreads_windows)
+   target_link_libraries(dark PUBLIC wsock32)
+-  target_link_libraries(uselib PRIVATE PThreads_windows::PThreads_windows)
++  #target_link_libraries(uselib PRIVATE PThreads_windows::PThreads_windows)
+   target_compile_definitions(darknet PRIVATE -D_CRT_RAND_S -DNOMINMAX -D_USE_MATH_DEFINES)
+   target_compile_definitions(dark PRIVATE -D_CRT_RAND_S -DNOMINMAX -D_USE_MATH_DEFINES)
+   target_compile_definitions(dark PUBLIC -D_CRT_SECURE_NO_WARNINGS)
+-  target_compile_definitions(uselib PRIVATE -D_CRT_RAND_S -DNOMINMAX -D_USE_MATH_DEFINES)
++  #target_compile_definitions(uselib PRIVATE -D_CRT_RAND_S -DNOMINMAX -D_USE_MATH_DEFINES)
  endif()
  
--add_executable(uselib ${CMAKE_CURRENT_LIST_DIR}/src/yolo_console_dll.cpp)
- if(BUILD_AS_CPP)
-   set_target_properties(uselib PROPERTIES LINKER_LANGUAGE CXX)
+ if(MSVC OR MINGW)
+@@ -494,14 +465,12 @@ endif()
+ 
+ target_link_libraries(darknet PRIVATE Threads::Threads)
+ target_link_libraries(dark PUBLIC Threads::Threads)
+-target_link_libraries(uselib PRIVATE Threads::Threads)
++#target_link_libraries(uselib PRIVATE Threads::Threads)
+ 
+ if(ENABLE_ZED_CAMERA)
+   target_link_libraries(darknet PRIVATE ${ZED_LIBRARIES})
+   target_link_libraries(dark PUBLIC ${ZED_LIBRARIES})
+-  target_link_libraries(uselib PRIVATE ${ZED_LIBRARIES})
+   target_compile_definitions(darknet PRIVATE -DZED_STEREO)
+-  target_compile_definitions(uselib PRIVATE -DZED_STEREO)
+   target_compile_definitions(dark PUBLIC -DZED_STEREO)
  endif()
+ 
+@@ -520,27 +489,6 @@ if(USE_INTEGRATED_LIBS)
+   target_compile_definitions(dark PRIVATE -D_TIMESPEC_DEFINED)
+ endif()
+ 
+-target_link_libraries(uselib PRIVATE dark)
+-if(OpenCV_FOUND AND OpenCV_VERSION VERSION_GREATER "3.0" AND BUILD_USELIB_TRACK)
+-  target_link_libraries(uselib_track PRIVATE dark)
+-  target_compile_definitions(uselib_track PRIVATE TRACK_OPTFLOW=1)
+-  target_compile_definitions(uselib_track PRIVATE -DUSE_CMAKE_LIBS)
+-  if(BUILD_AS_CPP)
+-    set_target_properties(uselib_track PROPERTIES LINKER_LANGUAGE CXX)
+-  endif()
+-  target_include_directories(uselib_track PRIVATE ${CMAKE_CURRENT_LIST_DIR}/include)
+-  target_link_libraries(uselib_track PRIVATE ${OpenCV_LINKED_COMPONENTS})
+-  if(ENABLE_ZED_CAMERA)
+-    target_link_libraries(uselib_track PRIVATE ${ZED_LIBRARIES})
+-    target_compile_definitions(uselib_track PRIVATE -DZED_STEREO)
+-  endif()
+-  if(MSVC)
+-    target_link_libraries(uselib_track PRIVATE PThreads_windows::PThreads_windows)
+-    target_compile_definitions(uselib_track PRIVATE -D_CRT_RAND_S -DNOMINMAX -D_USE_MATH_DEFINES)
+-  endif()
+-  target_link_libraries(uselib_track PRIVATE Threads::Threads)
+-endif()
+-
+ #set_target_properties(dark PROPERTIES PUBLIC_HEADER "${exported_headers};${CMAKE_CURRENT_LIST_DIR}/include/yolo_v2_class.hpp")
+ set_target_properties(dark PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_LIST_DIR}/include/darknet.h;${CMAKE_CURRENT_LIST_DIR}/include/yolo_v2_class.hpp")
+ 
+@@ -553,14 +501,9 @@ install(TARGETS dark EXPORT DarknetTargets
+   PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}"
+   COMPONENT dev
+ )
+-install(TARGETS uselib darknet
++install(TARGETS darknet
+   DESTINATION "${INSTALL_BIN_DIR}"
+ )
+-if(OpenCV_FOUND AND OpenCV_VERSION VERSION_GREATER "3.0" AND BUILD_USELIB_TRACK)
+-  install(TARGETS uselib_track
+-    DESTINATION "${INSTALL_BIN_DIR}"
+-  )
+-endif()
+ 
+ install(EXPORT DarknetTargets
+   FILE DarknetTargets.cmake

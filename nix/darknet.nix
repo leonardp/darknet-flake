@@ -22,8 +22,8 @@ stdenv.mkDerivation rec {
   };
 
   # not working -> forked
-  #patchches = [ ./rename-build-dir.patch ];
-  patchches = [ ./do-not-build-uselib.patch ];
+  #patches = [ ./rename-build-dir.patch ];
+  patches = [ ./do-not-build-uselib.patch ];
 
   postFixup = ''
     addOpenGLRunpath darknet
@@ -51,6 +51,7 @@ stdenv.mkDerivation rec {
     "-DENABLE_VCPKG_INTEGRATION=OFF"
     "-DVCPKG_USE_OPENCV4=ON"
     "-DVCPKG_BUILD_OPENCV_WITH_CUDA=OFF"
+    "-DUSELIB_TRACK=OFF"
   ];
 
   installPhase = ''
