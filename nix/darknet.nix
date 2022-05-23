@@ -31,7 +31,9 @@ stdenv.mkDerivation rec {
   '';
 
   #nativeBuildInputs = [ pkg-config ]; # pkg-config needed if not using cmake
-  nativeBuildInputs = [ cmake addOpenGLRunpath ]
+  nativeBuildInputs = [ cmake addOpenGLRunpath ];
+
+  buildInputs = [ ]
     ++ lib.optional opencvSupport opencv
     ++ lib.optional cudaSupport cudaPackages.cudatoolkit
     ++ lib.optional cudnnSupport cudaPackages.cudnn

@@ -16,8 +16,8 @@
       #
 
       darknetOverride = {
-        #cudaSupport = true;
-        #cudnnSupport = true;
+        cudaSupport = true;
+        cudnnSupport = true;
       };
       opencvOverride = {
         enableGtk3 = true;
