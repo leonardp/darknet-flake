@@ -25,7 +25,7 @@ stdenv.mkDerivation rec {
   #patches = [ ./rename-build-dir.patch ];
   patches = [ ./do-not-build-uselib.patch ];
 
-  postFixup = lib.mkIf cudaSupport ''
+  postFixup = lib.optional cudaSupport ''
     addOpenGLRunpath darknet
     addOpenGLRunpath libdarknet.so
   '';
