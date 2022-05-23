@@ -3,13 +3,12 @@
 , fetchgit
 , cmake
 #, pkg-config # only needed if not using cmake
-, addOpenGLRunpath
-, opencvSupport ? false
+, opencvSupport ? true
 , opencv
 , cudaSupport ? false
 , cudnnSupport ? false
 , cudaPackages
-#, cudnn_cudatoolkit_11
+, addOpenGLRunpath
 }:
 
 stdenv.mkDerivation rec {
@@ -34,8 +33,8 @@ stdenv.mkDerivation rec {
   #nativeBuildInputs = [ pkg-config ]; # pkg-config needed if not using cmake
   nativeBuildInputs = [ cmake addOpenGLRunpath ]
     ++ lib.optional opencvSupport opencv
-    ++ lib.optional cudaSupport cudaPackages.cudatoolkit_11
-    #++ lib.optional cudnnSupport cudnn_cudatoolkit_11
+    ++ lib.optional cudaSupport cudaPackages.cudatoolkit
+    ++ lib.optional cudnnSupport cudaPackages.cudnn
   ;
 
   propagatedBuildInputs = [ opencv ];

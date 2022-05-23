@@ -27,7 +27,7 @@
       packages = forAllSystems (system:
         let pkgs = nixpkgsFor.${system};
         in {
-          darknet = pkgs.callPackage ./nix/darknet.nix {};
+          darknet = pkgs.callPackage ./nix/darknet.nix darknetOverride;
           pydnet = pkgs.callPackage ./nix/pydnet.nix { darknet = self.packages.${system}.darknet; };
       });
 
