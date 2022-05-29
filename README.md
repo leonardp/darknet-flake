@@ -9,3 +9,8 @@ nix develop
 ```
 this will open a jupyter notebook in your browser
 run `demo.ipynb` to see yolov4 in action
+
+### Note:
+The fiftyone application does not work for [local data](https://voxel51.com/docs/fiftyone/environments/index.html#local-data).
+The package fiftyone-db is a precompiled mongodb binary which is wrapped by the main application.
+The other storage environments *might work* but are untested.
