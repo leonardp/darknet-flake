@@ -30,6 +30,16 @@
         in {
           darknet = pkgs.callPackage ./nix/darknet.nix { };
           pydnet = pkgs.callPackage ./nix/pydnet.nix { darknet = self.packages.${system}.darknet; };
+          fiftyone-brain = pkgs.callPackage ./nix/fiftyone/fiftyone-brain.nix { };
+          fiftyone-db = pkgs.callPackage ./nix/fiftyone/fiftyone-db.nix { };
+          voxel51-eta = pkgs.callPackage ./nix/fiftyone/voxel51-eta.nix { };
+          uap3 = pkgs.callPackage ./nix/fiftyone/uap3.nix { };
+          fiftyone = pkgs.callPackage ./nix/fiftyone/fiftyone.nix {
+            fiftyone-brain = self.packages.${system}.fiftyone-brain;
+            fiftyone-db = self.packages.${system}.fiftyone-db;
+            voxel51-eta = self.packages.${system}.voxel51-eta;
+            uap3 = self.packages.${system}.uap3;
+          };
       });
 
       defaultPackage = forAllSystems (system: self.packages.${system}.darknet);

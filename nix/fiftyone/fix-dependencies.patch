@@ -1,0 +1,45 @@
+diff --git a/setup.py b/setup.py
+index 0982259d7..ea2889a47 100644
+--- a/setup.py
++++ b/setup.py
+@@ -48,10 +48,12 @@ INSTALL_REQUIRES = [
+     "packaging",
+     "pandas",
+     "Pillow>=6.2",
+-    "plotly>=4.14,<5",
++    #"plotly>=4.14,<5",
++    "plotly",
+     "pprintpp",
+     "psutil",
+-    "pymongo>=3.11,<4",
++    #"pymongo>=3.11,<4",
++    "pymongo",
+     "pytz",
+     "PyYAML",
+     "retrying",
+@@ -66,9 +68,12 @@ INSTALL_REQUIRES = [
+     "xmltodict",
+     "universal-analytics-python3>=1.0.1,<2",
+     # internal packages
+-    "fiftyone-brain>=0.8,<0.9",
+-    "fiftyone-db>=0.3,<0.4",
+-    "voxel51-eta>=0.6.6,<0.7",
++    #"fiftyone-brain>=0.8,<0.9",
++    "fiftyone-brain",
++    #"fiftyone-db>=0.3,<0.4",
++    "fiftyone-db",
++    #"voxel51-eta>=0.6.6,<0.7",
++    "voxel51-eta",
+ ]
+ 
+ 
+@@ -79,7 +84,8 @@ CHOOSE_INSTALL_REQUIRES = [
+             "opencv-contrib-python",
+             "opencv-contrib-python-headless",
+         ),
+-        "opencv-python-headless",
++        #"opencv-python-headless",
++        "opencv",
+     )
+ ]
+ 
