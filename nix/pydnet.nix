@@ -2,6 +2,7 @@
 , substituteAll
 , python3Packages
 , darknet
+, enableGtk3 ? true
 , fetchgit
 }:
 
@@ -17,7 +18,9 @@ python3Packages.buildPythonPackage rec {
     hash = "sha256-wGmQeHJRgPqkYFj7CW484s3UuzX5sr/QdKsKGs2HS3s=";
   };
 
-  nativeBuildInputs = [ python3Packages.opencv4 ];
+  nativeBuildInputs = [
+    (python3Packages.opencv4.override { enableGtk3=enableGtk3; })
+  ];
 
   patches = [
     (substituteAll {
@@ -26,7 +29,7 @@ python3Packages.buildPythonPackage rec {
     })
   ];
 
-  # no worky (wrong path?)
+  # no worky (wrong path for darknet.py ?!)
   #postPatchPhase = ''
   #  sed -i 's|find_library("darknet")|"${darknet}/lib/libdarknet.so"|' darknet.py
   #'';
