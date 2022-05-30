@@ -18,7 +18,7 @@ python3Packages.buildPythonPackage rec {
     hash = "sha256-wGmQeHJRgPqkYFj7CW484s3UuzX5sr/QdKsKGs2HS3s=";
   };
 
-  nativeBuildInputs = [
+  propagatedBuildInputs = [
     (python3Packages.opencv4.override { enableGtk3=enableGtk3; })
   ];
 
