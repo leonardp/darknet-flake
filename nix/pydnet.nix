@@ -1,10 +1,15 @@
 { lib
+, fetchgit
 , substituteAll
 , python3Packages
 , darknet
 , enableGtk3 ? true
-, fetchgit
+, gtk3
+, opencv
 }:
+let
+  cvOverride = (if enableGtk3 then { enableGtk3=true; } else { } );
+in
 
 python3Packages.buildPythonPackage rec {
   pname = "pydnet";
@@ -18,8 +23,9 @@ python3Packages.buildPythonPackage rec {
     hash = "sha256-wGmQeHJRgPqkYFj7CW484s3UuzX5sr/QdKsKGs2HS3s=";
   };
 
-  propagatedBuildInputs = [
-    (python3Packages.opencv4.override { enableGtk3=enableGtk3; })
+  buildInputs = [
+    #opencvGtk
+    (python3Packages.opencv4.override cvOverride)
   ];
 
   patches = [

@@ -34,12 +34,14 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ cmake addOpenGLRunpath ];
 
   buildInputs = [ ]
-    ++ lib.optional opencvSupport opencv
+    #++ lib.optional opencvSupport opencv
     ++ lib.optional cudaSupport cudaPackages.cudatoolkit
     ++ lib.optional cudnnSupport cudaPackages.cudnn
   ;
 
-  propagatedBuildInputs = [ opencv ];
+  propagatedBuildInputs = [ ]
+    ++ lib.optional opencvSupport opencv
+  ;
 
   hardeningDisable = [ "format" ];
 

@@ -51,8 +51,9 @@
             buildInputs = with pkgs; [
               (python3.withPackages(ps: with ps; [
                 self.packages.${system}.pydnet
-                opencv4
+                (python3Packages.opencv4.override { enableGtk3=true; })
               ]))
+              (opencv.override { enableGtk3=true; })
               cowsay
               fortune
               self.packages.${system}.darknet
